@@ -1,0 +1,30 @@
+{
+  "name": "com.cupkekgames.settings",
+  "displayName": "CupkekGames Settings",
+  "version": "0.1.0",
+  "author": {
+    "name": "CupkekGames",
+    "url": "https://www.docs.cupkek.games"
+  },
+  "unity": "6000.0",
+  "documentationUrl": "https://docs.cupkek.games/",
+  "description": "Settings system + Luna UI panel for CupkekGames packages: graphics quality, audio, locale, input bindings.",
+  "keywords": [
+    "Settings",
+    "Configuration",
+    "Localization",
+    "Input",
+    "URP",
+    "Autosave",
+    "CupkekGames"
+  ],
+  "dependencies": {
+    "com.cupkekgames.core": "0.1.0",
+    "com.cupkekgames.input": "0.1.0",
+    "com.cupkekgames.luna": "1.4.0",
+    "com.cupkekgames.data": "0.1.0",
+    "com.unity.localization": "1.5.8",
+    "com.unity.inputsystem": "1.16.0",
+    "com.unity.render-pipelines.universal": "17.3.0"
+  }
+}

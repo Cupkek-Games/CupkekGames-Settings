@@ -1,0 +1,37 @@
+{
+    "name": "CupkekGames.Systems.Settings",
+    "rootNamespace": "",
+    "references": [
+        "GUID:38afbb2359e489e4fa79dc88f61428b5",
+        "GUID:41f2041b77014a8d98af018fd4c4a8ce",
+        "GUID:15fc0a57446b3144c949da3e2b9737a9",
+        "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:84651a3751eca9349aac36a66bba901b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.inputsystem",
+            "expression": "",
+            "define": "UNITY_INPUT"
+        },
+        {
+            "name": "com.unity.localization",
+            "expression": "",
+            "define": "UNITY_LOCALIZATION"
+        },
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "",
+            "define": "UNITY_URP"
+        }
+    ],
+    "noEngineReferences": false
+}

@@ -1,0 +1,33 @@
+{
+    "name": "CupkekGames.Systems.UI.Settings",
+    "rootNamespace": "",
+    "references": [
+        "GUID:38afbb2359e489e4fa79dc88f61428b5",
+        "GUID:41f2041b77014a8d98af018fd4c4a8ce",
+        "GUID:8c5a58f4ceeaeff428a5333f02ab4313",
+        "GUID:7aa751bf60c77fa489e195763cb7875e",
+        "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
+        "GUID:84651a3751eca9349aac36a66bba901b",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.localization",
+            "expression": "",
+            "define": "UNITY_LOCALIZATION"
+        },
+        {
+            "name": "com.unity.inputsystem",
+            "expression": "",
+            "define": "UNITY_INPUT"
+        }
+    ],
+    "noEngineReferences": false
+}
