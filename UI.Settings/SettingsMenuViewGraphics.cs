@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-using CupkekGames.Core;
 
-namespace CupkekGames.Systems.UI
+namespace CupkekGames.Settings.UI
 {
   public class SettingsMenuViewGraphics : SettingsMenuViewSection
   {

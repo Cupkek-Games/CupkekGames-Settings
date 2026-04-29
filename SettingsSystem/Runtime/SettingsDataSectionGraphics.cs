@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 #endif
 
-namespace CupkekGames.Systems
+namespace CupkekGames.Settings
 {
   [CreateAssetMenu(fileName = "SectionGraphics", menuName = "CupkekGames/Settings/Section/Graphics")]
   public class SettingsDataSectionGraphics : SettingsDataSection

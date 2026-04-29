@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-namespace CupkekGames.Systems
+namespace CupkekGames.Settings
 {
   public abstract class SettingsDataSection : ScriptableObject
   {

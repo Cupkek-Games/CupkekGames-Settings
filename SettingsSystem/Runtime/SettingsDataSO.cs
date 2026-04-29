@@ -1,7 +1,7 @@
 using UnityEngine;
-using CupkekGames.Core;
+using CupkekGames.KeyValueDatabase;
 
-namespace CupkekGames.Systems
+namespace CupkekGames.Settings
 {
   [CreateAssetMenu(fileName = "Settings", menuName = "CupkekGames/Settings/Settings")]
   public class SettingsDataSO : KeyValueDatabaseSO<string, SettingsDataSection>

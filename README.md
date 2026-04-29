@@ -11,9 +11,14 @@ Settings registry + Luna UI panel: graphics quality, audio, locale, input bindin
 
 ## Dependencies
 
-- `com.cupkekgames.core`
+- `com.cupkekgames.singleton` (`SettingsSystem` singleton)
+- `com.cupkekgames.keyvaluedatabase` (`SettingsDataSO` extends `KeyValueDatabaseSO`)
+- `com.cupkekgames.editorinspector` (`[MultiLineHeader]` on data classes)
+- `com.cupkekgames.input`
 - `com.cupkekgames.luna` (UI components)
-- `com.cupkekgames.data` (settings persistence via GameSave from data; UI.WithGameSave subscribes to GameSave events)
+- `com.cupkekgames.data` (settings persistence via GameSave; UI.WithGameSave subscribes to GameSave events)
 - `com.unity.localization` (locale switching)
 - `com.unity.inputsystem` (input rebinding)
 - `com.unity.render-pipelines.universal` (graphics quality)
+
+Note: `EnumHelper` (small static helper, formerly in `com.cupkekgames.core`) was folded into this package's `SettingsSystem/Runtime/EnumHelper.cs` since `SettingsMenuViewGraphics` was its only consumer.

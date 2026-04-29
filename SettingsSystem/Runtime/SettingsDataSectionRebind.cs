@@ -1,11 +1,11 @@
-using CupkekGames.Core;
+using CupkekGames.Input;
 using UnityEngine;
 
 #if UNITY_INPUT
 using UnityEngine.InputSystem;
 #endif
 
-namespace CupkekGames.Systems
+namespace CupkekGames.Settings
 {
   [CreateAssetMenu(fileName = "SectionRebind", menuName = "CupkekGames/Settings/Section/Rebind")]
   public class SettingsDataSectionRebind : SettingsDataSection

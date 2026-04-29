@@ -1,13 +1,14 @@
+using CupkekGames.EditorInspector;
+using CupkekGames.Input;
 using UnityEngine;
 using UnityEngine.UIElements;
-using CupkekGames.Core;
 using CupkekGames.Luna;
 
 #if UNITY_INPUT
 using UnityEngine.InputSystem;
 #endif
 
-namespace CupkekGames.Systems.UI
+namespace CupkekGames.Settings.UI
 {
   public class SettingsMenuView : UIViewComponent
   {

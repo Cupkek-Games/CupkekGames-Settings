@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine.UIElements;
-using CupkekGames.Core;
-using CupkekGames.Systems;
+using CupkekGames.Services;
+using CupkekGames.Settings;
 
 #if UNITY_LOCALIZATION
 using UnityEngine.Localization;
@@ -9,7 +9,7 @@ using UnityEngine.Localization.Settings;
 using UnityEngine.ResourceManagement.AsyncOperations;
 #endif
 
-namespace CupkekGames.Systems.UI
+namespace CupkekGames.Settings.UI
 {
   public class SettingsMenuViewGameplay : SettingsMenuViewSection
   {

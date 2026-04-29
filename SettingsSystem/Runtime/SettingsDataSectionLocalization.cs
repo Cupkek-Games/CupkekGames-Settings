@@ -5,7 +5,7 @@ using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 #endif
 
-namespace CupkekGames.Systems
+namespace CupkekGames.Settings
 {
   [CreateAssetMenu(fileName = "SectionLocalization", menuName = "CupkekGames/Settings/Section/Localization")]
   public class SettingsDataSectionLocalization : SettingsDataSection

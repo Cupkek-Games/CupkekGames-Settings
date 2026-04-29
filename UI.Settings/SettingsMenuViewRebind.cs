@@ -1,14 +1,14 @@
+using CupkekGames.Input;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
 using CupkekGames.Luna;
 using UnityEngine;
 
 #if UNITY_INPUT
-using CupkekGames.Core;
 using UnityEngine.InputSystem;
 #endif
 
-namespace CupkekGames.Systems.UI
+namespace CupkekGames.Settings.UI
 {
     public class SettingsMenuViewRebind : SettingsMenuViewSection
     {

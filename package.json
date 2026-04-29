@@ -1,7 +1,7 @@
-{
+﻿{
   "name": "com.cupkekgames.settings",
   "displayName": "CupkekGames Settings",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "CupkekGames",
     "url": "https://www.docs.cupkek.games"
@@ -19,10 +19,17 @@
     "CupkekGames"
   ],
   "dependencies": {
-    "com.cupkekgames.core": "0.1.0",
+    "com.cupkekgames.singleton": "0.1.0",
+    "com.cupkekgames.keyvaluedatabase": "0.1.0",
+    "com.cupkekgames.editorinspector": "0.1.0",
     "com.cupkekgames.input": "0.1.0",
     "com.cupkekgames.luna": "1.4.0",
     "com.cupkekgames.data": "0.1.0",
+    "com.cupkekgames.sequencer": "0.1.0",
+    "com.cupkekgames.services": "0.1.0",
+    "com.cupkekgames.addressableassets": "0.1.0",
+    "com.cupkekgames.scenemanagement": "0.1.0",
+    "com.cupkekgames.gamesave": "0.1.0",
     "com.unity.localization": "1.5.8",
     "com.unity.inputsystem": "1.16.0",
     "com.unity.render-pipelines.universal": "17.3.0"

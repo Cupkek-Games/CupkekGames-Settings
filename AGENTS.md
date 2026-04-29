@@ -27,10 +27,15 @@ com.cupkekgames.settings/
 
 ## Dependencies
 
-- `com.cupkekgames.core`
+- `com.cupkekgames.singleton` (`SettingsSystem` singleton)
+- `com.cupkekgames.keyvaluedatabase` (`SettingsDataSO` extends `KeyValueDatabaseSO`)
+- `com.cupkekgames.editorinspector` (`[MultiLineHeader]`)
+- `com.cupkekgames.input`
 - `com.cupkekgames.luna`
 - `com.cupkekgames.data` (settings persist via GameSave; autosave UI listens to GameSave events)
 - `com.unity.localization`, `com.unity.inputsystem`, `com.unity.render-pipelines.universal` (versionDefines)
+
+Note: `EnumHelper` (formerly in `com.cupkekgames.core`) was folded into this package's `SettingsSystem/Runtime/EnumHelper.cs` since `SettingsMenuViewGraphics` is its only consumer.
 
 ## Coding Conventions
 

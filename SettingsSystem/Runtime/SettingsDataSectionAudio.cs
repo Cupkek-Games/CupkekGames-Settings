@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace CupkekGames.Systems
+namespace CupkekGames.Settings
 {
   [CreateAssetMenu(fileName = "SectionAudio", menuName = "CupkekGames/Settings/Section/Audio")]
   public class SettingsDataSectionAudio : SettingsDataSection

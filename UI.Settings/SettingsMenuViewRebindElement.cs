@@ -1,5 +1,5 @@
+using CupkekGames.Input;
 using UnityEngine.UIElements;
-using CupkekGames.Core;
 using System.Collections.Generic;
 using CupkekGames.Luna;
 
@@ -7,7 +7,7 @@ using CupkekGames.Luna;
 using UnityEngine.InputSystem;
 #endif
 
-namespace CupkekGames.Systems.UI
+namespace CupkekGames.Settings.UI
 {
     public class SettingsMenuViewRebindElement
     {

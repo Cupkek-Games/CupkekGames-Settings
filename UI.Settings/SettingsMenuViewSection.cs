@@ -1,9 +1,8 @@
-using CupkekGames.Core;
 using CupkekGames.Luna;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace CupkekGames.Systems.UI
+namespace CupkekGames.Settings.UI
 {
   public abstract class SettingsMenuViewSection : MonoBehaviour
   {

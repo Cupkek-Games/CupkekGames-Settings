@@ -1,8 +1,7 @@
 using UnityEngine.UIElements;
-using CupkekGames.Core;
 using UnityEngine;
 
-namespace CupkekGames.Systems.UI
+namespace CupkekGames.Settings.UI
 {
   public class SettingsMenuViewAudio : SettingsMenuViewSection
   {

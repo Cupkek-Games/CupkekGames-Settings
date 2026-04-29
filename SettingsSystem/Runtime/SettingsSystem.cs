@@ -1,5 +1,5 @@
 using UnityEngine;
-using CupkekGames.Core;
+using CupkekGames.Singleton;
 
 #if UNITY_LOCALIZATION
 using System.Collections;
@@ -7,7 +7,7 @@ using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 #endif
 
-namespace CupkekGames.Systems
+namespace CupkekGames.Settings
 {
   public class SettingsSystem : Singleton<SettingsSystem>
   {

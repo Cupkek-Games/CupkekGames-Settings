@@ -1,13 +1,14 @@
 {
-    "name": "CupkekGames.Systems.Settings",
+    "name": "CupkekGames.Settings",
     "rootNamespace": "",
     "references": [
-        "GUID:38afbb2359e489e4fa79dc88f61428b5",
+        "GUID:4d0a4020d4304c2eb6ba6c7ede9ce947",
         "GUID:41f2041b77014a8d98af018fd4c4a8ce",
         "GUID:15fc0a57446b3144c949da3e2b9737a9",
         "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
         "GUID:75469ad4d38634e559750d17036d5f7c",
-        "GUID:84651a3751eca9349aac36a66bba901b"
+        "GUID:84651a3751eca9349aac36a66bba901b",
+        "GUID:aa6539cffd9044b9aa2dc37aa2c66ef0"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
