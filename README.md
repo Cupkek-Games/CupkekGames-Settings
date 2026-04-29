@@ -11,8 +11,8 @@ Settings registry + Luna UI panel: graphics quality, audio, locale, input bindin
 
 ## Dependencies
 
-- `com.cupkekgames.singleton` (`SettingsSystem` singleton)
-- `com.cupkekgames.keyvaluedatabase` (`SettingsDataSO` extends `KeyValueDatabaseSO`)
+- `com.cupkekgames.singletons` (`SettingsSystem` singleton)
+- `com.cupkekgames.keyvaluedatabases` (`SettingsDataSO` extends `KeyValueDatabaseSO`)
 - `com.cupkekgames.editorinspector` (`[MultiLineHeader]` on data classes)
 - `com.cupkekgames.input`
 - `com.cupkekgames.luna` (UI components)

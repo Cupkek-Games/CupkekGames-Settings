@@ -1,5 +1,5 @@
 using UnityEngine;
-using CupkekGames.Singleton;
+using CupkekGames.Singletons;
 
 #if UNITY_LOCALIZATION
 using System.Collections;

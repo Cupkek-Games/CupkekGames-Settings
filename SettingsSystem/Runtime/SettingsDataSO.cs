@@ -1,5 +1,5 @@
 using UnityEngine;
-using CupkekGames.KeyValueDatabase;
+using CupkekGames.KeyValueDatabases;
 
 namespace CupkekGames.Settings
 {

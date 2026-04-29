@@ -27,8 +27,8 @@ com.cupkekgames.settings/
 
 ## Dependencies
 
-- `com.cupkekgames.singleton` (`SettingsSystem` singleton)
-- `com.cupkekgames.keyvaluedatabase` (`SettingsDataSO` extends `KeyValueDatabaseSO`)
+- `com.cupkekgames.singletons` (`SettingsSystem` singleton)
+- `com.cupkekgames.keyvaluedatabases` (`SettingsDataSO` extends `KeyValueDatabaseSO`)
 - `com.cupkekgames.editorinspector` (`[MultiLineHeader]`)
 - `com.cupkekgames.input`
 - `com.cupkekgames.luna`
