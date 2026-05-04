@@ -6,7 +6,6 @@ namespace CupkekGames.Settings.UI
 {
   public class SettingsMenuViewGraphics : SettingsMenuViewSection
   {
-    // Video Settings
     [Header("Set to 0,0 to not force aspect ratio")]
     [SerializeField] private Vector2 _resolutionAspectRatio = new Vector2(16, 9);
 
@@ -21,17 +20,12 @@ namespace CupkekGames.Settings.UI
 
     private RadioButtonGroup _antiAliasing;
 
-    private RadioButtonGroup _postProcessing;
-
     private RadioButtonGroup _shadows;
 
     private RadioButtonGroup _textureQuality;
 
-    private RadioButtonGroup _effectsQuality;
-
     protected override void Initialize()
     {
-      // Video Settings
       Resolution[] resolutions = Screen.resolutions;
 
       _dropdownResolution = UIDocument.rootVisualElement.Q<DropdownField>("DropdownResolution");
@@ -40,7 +34,6 @@ namespace CupkekGames.Settings.UI
       _resolutions = new List<Resolution>();
       foreach (var res in resolutions)
       {
-        // Make sure 16:9 aspect ratio
         if (_resolutionAspectRatio.x > 0 && res.width % _resolutionAspectRatio.x != 0)
         {
           continue;
@@ -61,10 +54,8 @@ namespace CupkekGames.Settings.UI
       _radioGroupFpsLimit = UIDocument.rootVisualElement.Q<RadioButtonGroup>("RadioGroupFpsLimit");
       _toggleVSync = UIDocument.rootVisualElement.Q<Toggle>("ToggleVSync");
       _antiAliasing = UIDocument.rootVisualElement.Q<RadioButtonGroup>("AntiAliasing");
-      _postProcessing = UIDocument.rootVisualElement.Q<RadioButtonGroup>("PostProcessing");
       _shadows = UIDocument.rootVisualElement.Q<RadioButtonGroup>("Shadows");
       _textureQuality = UIDocument.rootVisualElement.Q<RadioButtonGroup>("TextureQuality");
-      _effectsQuality = UIDocument.rootVisualElement.Q<RadioButtonGroup>("EffectsQuality");
 
       _dropdownResolution.RegisterValueChangedCallback(OnDropdownResolutionChanged);
       _radioGroupWindowMode.RegisterValueChangedCallback(OnRadioGroupWindowModeChanged);
@@ -74,9 +65,7 @@ namespace CupkekGames.Settings.UI
       _antiAliasing.RegisterValueChangedCallback(OnAntiAliasingChanged);
       _shadows.RegisterValueChangedCallback(OnShadowsChanged);
 #endif
-      _postProcessing.RegisterValueChangedCallback(OnPostProcessingChanged);
       _textureQuality.RegisterValueChangedCallback(OnTextureQualityChanged);
-      _effectsQuality.RegisterValueChangedCallback(OnEffectsQualityChanged);
     }
 
     public void OnDisable()
@@ -89,9 +78,7 @@ namespace CupkekGames.Settings.UI
       _antiAliasing.UnregisterValueChangedCallback(OnAntiAliasingChanged);
       _shadows.UnregisterValueChangedCallback(OnShadowsChanged);
 #endif
-      _postProcessing.UnregisterValueChangedCallback(OnPostProcessingChanged);
       _textureQuality.UnregisterValueChangedCallback(OnTextureQualityChanged);
-      _effectsQuality.UnregisterValueChangedCallback(OnEffectsQualityChanged);
     }
 
     public override void OnTabSelected()
@@ -103,8 +90,6 @@ namespace CupkekGames.Settings.UI
     {
       return string.Format("{0}x{1} @{2:F2}Hz", resolution.width, resolution.height, resolution.refreshRateRatio.value);
     }
-
-    // Apply Settings to UI
 
     public override void ApplySettingsToUI()
     {
@@ -118,9 +103,7 @@ namespace CupkekGames.Settings.UI
       _antiAliasing.value = EnumHelper.GetIndexOfEnum(graphics.AntiAliasing);
       _shadows.value = EnumHelper.GetIndexOfEnum(graphics.Shadows);
 #endif
-      _postProcessing.value = EnumHelper.GetIndexOfEnum(graphics.PostProcessing);
       _textureQuality.value = 3 - EnumHelper.GetIndexOfEnum(graphics.TextureQuality);
-      _effectsQuality.value = EnumHelper.GetIndexOfEnum(graphics.EffectsQuality);
     }
 
     private void OnDropdownResolutionChanged(ChangeEvent<string> evt)
@@ -178,25 +161,11 @@ namespace CupkekGames.Settings.UI
     }
 #endif
 
-    private void OnPostProcessingChanged(ChangeEvent<int> evt)
-    {
-      SettingsDataSectionGraphics graphics = (SettingsDataSectionGraphics)_changedSettings.GetValue("graphics");
-
-      graphics.PostProcessing = EnumHelper.GetEnumFromIndex<SettingsDataSectionGraphics.SettingsPostProcessing>(evt.newValue);
-    }
-
     private void OnTextureQualityChanged(ChangeEvent<int> evt)
     {
       SettingsDataSectionGraphics graphics = (SettingsDataSectionGraphics)_changedSettings.GetValue("graphics");
 
       graphics.TextureQuality = EnumHelper.GetEnumFromIndex<SettingsDataSectionGraphics.SettingsTextureQuality>(3 - evt.newValue);
-    }
-
-    private void OnEffectsQualityChanged(ChangeEvent<int> evt)
-    {
-      SettingsDataSectionGraphics graphics = (SettingsDataSectionGraphics)_changedSettings.GetValue("graphics");
-
-      graphics.EffectsQuality = EnumHelper.GetEnumFromIndex<SettingsDataSectionGraphics.SettingsEffectsQuality>(evt.newValue);
     }
   }
 }

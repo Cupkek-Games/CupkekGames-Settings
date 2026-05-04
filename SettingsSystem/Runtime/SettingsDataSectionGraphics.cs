@@ -132,31 +132,7 @@ namespace CupkekGames.Settings
       Four = 4,
       Eight = 8
     }
-#endif
 
-    [SerializeField] private SettingsPostProcessing _postProcessing;
-    public SettingsPostProcessing PostProcessing
-    {
-      get
-      {
-        return _postProcessing;
-      }
-      set
-      {
-        _postProcessing = value;
-        // TODO: Implement Post Processing Quality
-      }
-    }
-
-    public enum SettingsPostProcessing
-    {
-      Low = 0,
-      Medium = 1,
-      High = 2,
-      Ultra = 3
-    }
-
-#if UNITY_URP
     [SerializeField] private SettingsShadows _shadows;
     public SettingsShadows Shadows
     {
@@ -205,29 +181,6 @@ namespace CupkekGames.Settings
       Eighth = 3
     }
 
-    [SerializeField] private SettingsEffectsQuality _effectsQuality;
-    public SettingsEffectsQuality EffectsQuality
-    {
-      get
-      {
-        return _effectsQuality;
-      }
-      set
-      {
-        _effectsQuality = value;
-
-        // TODO: Implement Effects Quality
-      }
-    }
-
-    public enum SettingsEffectsQuality
-    {
-      Low = 0,
-      Medium = 1,
-      High = 2,
-      Ultra = 3
-    }
-
     public override void SaveToPlayerPrefs(string key)
     {
       PlayerPrefs.SetInt($"{key}_FullScreenMode", (int)_fullScreenMode);
@@ -237,9 +190,7 @@ namespace CupkekGames.Settings
       PlayerPrefs.SetInt($"{key}_AntiAliasing", (int)AntiAliasing);
       PlayerPrefs.SetInt($"{key}_Shadows", (int)Shadows);
 #endif
-      PlayerPrefs.SetInt($"{key}_PostProcessing", (int)PostProcessing);
       PlayerPrefs.SetInt($"{key}_TextureQuality", (int)TextureQuality);
-      PlayerPrefs.SetInt($"{key}_EffectsQuality", (int)EffectsQuality);
 
       PlayerPrefs.SetInt($"{key}_ResolutionWidth", _resolutionWidth);
       PlayerPrefs.SetInt($"{key}_ResolutionHeight", _resolutionHeight);
@@ -272,17 +223,9 @@ namespace CupkekGames.Settings
         _shadows = (SettingsShadows)PlayerPrefs.GetInt($"{key}_Shadows");
       }
 #endif
-      if (PlayerPrefs.HasKey($"{key}_PostProcessing"))
-      {
-        _postProcessing = (SettingsPostProcessing)PlayerPrefs.GetInt($"{key}_PostProcessing");
-      }
       if (PlayerPrefs.HasKey($"{key}_TextureQuality"))
       {
         _textureQuality = (SettingsTextureQuality)PlayerPrefs.GetInt($"{key}_TextureQuality");
-      }
-      if (PlayerPrefs.HasKey($"{key}_EffectsQuality"))
-      {
-        _effectsQuality = (SettingsEffectsQuality)PlayerPrefs.GetInt($"{key}_EffectsQuality");
       }
 
       if (PlayerPrefs.HasKey($"{key}_ResolutionWidth"))
@@ -322,9 +265,7 @@ namespace CupkekGames.Settings
         _antiAliasing = copy.AntiAliasing;
         _shadows = copy.Shadows;
 #endif
-        _postProcessing = copy.PostProcessing;
         _textureQuality = copy.TextureQuality;
-        _effectsQuality = copy.EffectsQuality;
       }
     }
 
@@ -336,7 +277,6 @@ namespace CupkekGames.Settings
         FullScreenMode = copy.FullScreenMode;
         TargetFrameRate = copy.TargetFrameRate;
         VSync = copy.VSync;
-        PostProcessing = copy.PostProcessing;
 
 #if UNITY_URP
         AntiAliasing = copy.AntiAliasing;
@@ -344,17 +284,14 @@ namespace CupkekGames.Settings
 #endif
 
         TextureQuality = copy.TextureQuality;
-        EffectsQuality = copy.EffectsQuality;
       }
     }
 
     public override bool Equals(object obj)
     {
-      // Check for null and compare types
       if (obj == null || GetType() != obj.GetType())
         return false;
 
-      // Cast and compare properties
       SettingsDataSectionGraphics b = (SettingsDataSectionGraphics)obj;
 
       Resolution resolution = Resolution;
@@ -371,21 +308,18 @@ namespace CupkekGames.Settings
              AntiAliasing == b.AntiAliasing &&
              Shadows == b.Shadows &&
 #endif
-             PostProcessing == b.PostProcessing &&
-             TextureQuality == b.TextureQuality &&
-             EffectsQuality == b.EffectsQuality;
+             TextureQuality == b.TextureQuality;
     }
 
     public override int GetHashCode()
     {
-      // HashCode#Combine takes max 8 arguments
       Resolution resolution = Resolution;
       int hash1 = HashCode.Combine(resolution.width, resolution.height, resolution.refreshRateRatio.denominator,
         resolution.refreshRateRatio.numerator, _fullScreenMode);
 #if UNITY_URP
-      int hash2 = HashCode.Combine(VSync, TargetFrameRate, AntiAliasing, PostProcessing, Shadows, TextureQuality, EffectsQuality);
+      int hash2 = HashCode.Combine(VSync, TargetFrameRate, AntiAliasing, Shadows, TextureQuality);
 #else
-      int hash2 = HashCode.Combine(VSync, TargetFrameRate, PostProcessing, TextureQuality, EffectsQuality);
+      int hash2 = HashCode.Combine(VSync, TargetFrameRate, TextureQuality);
 #endif
 
       return HashCode.Combine(hash1, hash2);
