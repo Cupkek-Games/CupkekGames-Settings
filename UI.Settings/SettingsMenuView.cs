@@ -3,6 +3,7 @@ using CupkekGames.Input;
 using UnityEngine;
 using UnityEngine.UIElements;
 using CupkekGames.Luna;
+using CupkekGames.Luna.Navigation;
 
 #if UNITY_INPUT
 using UnityEngine.InputSystem;
@@ -196,7 +197,7 @@ namespace CupkekGames.Settings.UI
 
     public void ExitSettings()
     {
-      FadeOutThenDestroy();
+      LunaNavigation.PopBackStack();
     }
 
     private void OnAcceptModal()
