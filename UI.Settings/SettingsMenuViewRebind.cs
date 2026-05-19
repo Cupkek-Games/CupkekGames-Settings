@@ -33,11 +33,11 @@ namespace CupkekGames.Settings.UI
             _rebindOverlay = new UIView(
                 gameObject,
                 rebindOverlayElement,
-                UIStartVisibility.Invisible,
-                null,
-                0.5f,
-                EasingMode.EaseOutCirc,
-                true);
+                focusElement: null,
+                fadeDuration: 0.5f,
+                easingMode: EasingMode.EaseOutCirc,
+                disableOtherViewsOnFadeIn: true);
+            _rebindOverlay.ApplyStartVisibility(UIStartVisibility.Invisible);
             _rebindOverlayLabel = UIDocument.rootVisualElement.Q<Label>("RebindOverlayLabel");
 
 #if UNITY_INPUT
