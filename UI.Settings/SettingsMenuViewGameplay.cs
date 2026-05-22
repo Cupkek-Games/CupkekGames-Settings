@@ -23,7 +23,7 @@ namespace CupkekGames.Settings.UI
     protected override void Initialize()
     {
       // Language Settings
-      _dropdownLanguage = UIDocument.rootVisualElement.Q<DropdownField>("DropdownLanguage");
+      _dropdownLanguage = Root.Q<DropdownField>("DropdownLanguage");
 
 #if UNITY_LOCALIZATION
       _initializeOperation = LocalizationSettings.SelectedLocaleAsync;

@@ -28,8 +28,8 @@ namespace CupkekGames.Settings.UI
 
         protected override void Initialize()
         {
-            _rebindParent = UIDocument.rootVisualElement.Q<VisualElement>("RebindContainer");
-            VisualElement rebindOverlayElement = UIDocument.rootVisualElement.Q<VisualElement>("RebindOverlay");
+            _rebindParent = Root.Q<VisualElement>("RebindContainer");
+            VisualElement rebindOverlayElement = Root.Q<VisualElement>("RebindOverlay");
             _rebindOverlay = new UIView(
                 gameObject,
                 rebindOverlayElement,
@@ -38,7 +38,7 @@ namespace CupkekGames.Settings.UI
                 easingMode: EasingMode.EaseOutCirc,
                 disableOtherViewsOnFadeIn: true);
             _rebindOverlay.ApplyStartVisibility(UIStartVisibility.Invisible);
-            _rebindOverlayLabel = UIDocument.rootVisualElement.Q<Label>("RebindOverlayLabel");
+            _rebindOverlayLabel = Root.Q<Label>("RebindOverlayLabel");
 
 #if UNITY_INPUT
             _playerInput = null;

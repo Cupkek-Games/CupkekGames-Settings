@@ -14,16 +14,16 @@ namespace CupkekGames.Settings.UI
     protected override void Initialize()
     {
       // Audio Settings
-      VisualElement masterContainer = UIDocument.rootVisualElement.Q<VisualElement>("AudioMaster");
+      VisualElement masterContainer = Root.Q<VisualElement>("AudioMaster");
       _sliderMasterVolume = masterContainer.Q<SliderInt>();
 
-      VisualElement musicContainer = UIDocument.rootVisualElement.Q<VisualElement>("AudioMusic");
+      VisualElement musicContainer = Root.Q<VisualElement>("AudioMusic");
       _sliderMusicVolume = musicContainer.Q<SliderInt>();
 
-      VisualElement ambientContainer = UIDocument.rootVisualElement.Q<VisualElement>("AudioAmbient");
+      VisualElement ambientContainer = Root.Q<VisualElement>("AudioAmbient");
       _sliderAmbientVolume = ambientContainer.Q<SliderInt>();
 
-      VisualElement sfxContainer = UIDocument.rootVisualElement.Q<VisualElement>("AudioSFX");
+      VisualElement sfxContainer = Root.Q<VisualElement>("AudioSFX");
       _sliderSFXVolume = sfxContainer.Q<SliderInt>();
 
       _sliderMasterVolume.RegisterValueChangedCallback(OnMasterChanged);

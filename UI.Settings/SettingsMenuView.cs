@@ -43,27 +43,39 @@ namespace CupkekGames.Settings.UI
 
       _changedSettings = ScriptableObject.CreateInstance<SettingsDataSO>();
       _changedSettings.CopyValuesFrom(_settingsSystem.CurrentSettings);
+    }
+
+    protected override void OnUILoaded(VisualElement root)
+    {
+      base.OnUILoaded(root);
 
       // Left Panel
-      _tabView = UIDocument.rootVisualElement.Q<Luna.TabView>();
+      _tabView = root.Q<Luna.TabView>();
       // _tabView.Initialize(0, ParentElement);
-      _buttonReturn = UIDocument.rootVisualElement.Q<Button>("ReturnButton");
+      _buttonReturn = root.Q<Button>("ReturnButton");
 
       // Bottom Panel
-      _buttonRevert = UIDocument.rootVisualElement.Q<Button>("Revert");
-      _buttonDefault = UIDocument.rootVisualElement.Q<Button>("Default");
+      _buttonRevert = root.Q<Button>("Revert");
+      _buttonDefault = root.Q<Button>("Default");
 
       foreach (var section in _sections)
       {
         section.Initialize(_changedSettings);
       }
 
-      // Return on escape input
+      // Return on escape input. UIView is now constructed.
       UIView.AddAction(new UIViewActionEscape(Return));
+
+      // Run the enable-side wire-up if we were already enabled by the
+      // time the panel delivered its tree. Start() may also need to
+      // fire its initial focus call — handled in Start with a null guard.
+      if (enabled) OnEnable();
     }
 
     private void OnEnable()
     {
+      if (_buttonReturn == null) return; // panel hasn't reloaded yet
+
       _buttonReturn.clicked += Return;
       _buttonRevert.clicked += OnButtonRevertClicked;
       _buttonDefault.clicked += OnButtonDefaultClicked;
@@ -97,6 +109,8 @@ namespace CupkekGames.Settings.UI
 
     private void OnDisable()
     {
+      if (_buttonReturn == null) return;
+
       _buttonReturn.clicked -= Return;
       _buttonRevert.clicked -= OnButtonRevertClicked;
       _buttonDefault.clicked -= OnButtonDefaultClicked;
@@ -118,6 +132,7 @@ namespace CupkekGames.Settings.UI
 
     private void Start()
     {
+      if (_tabView == null) return; // panel hasn't reloaded yet — focus deferred to OnUILoaded path
       _tabView.GetTabHeader(_tabView.ActiveTab).Focus();
     }
 

@@ -28,7 +28,7 @@ namespace CupkekGames.Settings.UI
     {
       Resolution[] resolutions = Screen.resolutions;
 
-      _dropdownResolution = UIDocument.rootVisualElement.Q<DropdownField>("DropdownResolution");
+      _dropdownResolution = Root.Q<DropdownField>("DropdownResolution");
 
       List<string> choices = new List<string>();
       _resolutions = new List<Resolution>();
@@ -50,12 +50,12 @@ namespace CupkekGames.Settings.UI
       _dropdownResolution.choices = choices;
       _dropdownResolution.value = _dropdownResolution.choices[0];
 
-      _radioGroupWindowMode = UIDocument.rootVisualElement.Q<RadioButtonGroup>("RadioGroupWindowMode");
-      _radioGroupFpsLimit = UIDocument.rootVisualElement.Q<RadioButtonGroup>("RadioGroupFpsLimit");
-      _toggleVSync = UIDocument.rootVisualElement.Q<Toggle>("ToggleVSync");
-      _antiAliasing = UIDocument.rootVisualElement.Q<RadioButtonGroup>("AntiAliasing");
-      _shadows = UIDocument.rootVisualElement.Q<RadioButtonGroup>("Shadows");
-      _textureQuality = UIDocument.rootVisualElement.Q<RadioButtonGroup>("TextureQuality");
+      _radioGroupWindowMode = Root.Q<RadioButtonGroup>("RadioGroupWindowMode");
+      _radioGroupFpsLimit = Root.Q<RadioButtonGroup>("RadioGroupFpsLimit");
+      _toggleVSync = Root.Q<Toggle>("ToggleVSync");
+      _antiAliasing = Root.Q<RadioButtonGroup>("AntiAliasing");
+      _shadows = Root.Q<RadioButtonGroup>("Shadows");
+      _textureQuality = Root.Q<RadioButtonGroup>("TextureQuality");
 
       _dropdownResolution.RegisterValueChangedCallback(OnDropdownResolutionChanged);
       _radioGroupWindowMode.RegisterValueChangedCallback(OnRadioGroupWindowModeChanged);
