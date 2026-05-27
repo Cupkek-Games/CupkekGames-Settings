@@ -37,7 +37,7 @@ namespace CupkekGames.Settings.UI
                 fadeDuration: 0.5f,
                 easingMode: EasingMode.EaseOutCirc,
                 disableOtherViewsOnFadeIn: true);
-            _rebindOverlay.ApplyStartVisibility(UIStartVisibility.Invisible);
+            _rebindOverlay.ApplyStartVisibility(false);
             _rebindOverlayLabel = Root.Q<Label>("RebindOverlayLabel");
 
 #if UNITY_INPUT
