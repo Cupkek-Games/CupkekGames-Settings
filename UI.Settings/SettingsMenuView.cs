@@ -51,7 +51,12 @@ namespace CupkekGames.Settings.UI
 
       // Left Panel
       _tabView = root.Q<Luna.TabView>();
-      // _tabView.Initialize(0, ParentElement);
+      // Bind content-panel display toggle: each <ui:VisualElement
+      // class="tab-panel" name="X"> sibling in the UXML shows when the
+      // tab button "X" activates. Decouples TabView from content while
+      // keeping local-swap consumers like this one zero-controller for
+      // the panel mechanics.
+      TabPanelSwitcher.Bind(_tabView, root);
       _buttonReturn = root.Q<Button>("ReturnButton");
 
       // Bottom Panel
@@ -80,7 +85,7 @@ namespace CupkekGames.Settings.UI
       _buttonRevert.clicked += OnButtonRevertClicked;
       _buttonDefault.clicked += OnButtonDefaultClicked;
 
-      _tabView.OnTabSelected += OnTabSelected;
+      _tabView.OnTabChanged += OnTabChanged;
 
 #if UNITY_INPUT
       PlayerInput playerInput = null;
@@ -115,7 +120,7 @@ namespace CupkekGames.Settings.UI
       _buttonRevert.clicked -= OnButtonRevertClicked;
       _buttonDefault.clicked -= OnButtonDefaultClicked;
 
-      _tabView.OnTabSelected -= OnTabSelected;
+      _tabView.OnTabChanged -= OnTabChanged;
 
 #if UNITY_INPUT
       if (_inputRevert != null)
@@ -133,11 +138,13 @@ namespace CupkekGames.Settings.UI
     private void Start()
     {
       if (_tabView == null) return; // panel hasn't reloaded yet — focus deferred to OnUILoaded path
-      _tabView.GetTabHeader(_tabView.ActiveTab).Focus();
+      _tabView.GetTabButton(_tabView.ActiveTab)?.Focus();
     }
 
-    private void OnTabSelected(int index)
+    private void OnTabChanged(string tabId)
     {
+      int index = _tabView.GetTabIndex(tabId);
+      if (index < 0 || index >= _sections.Length) return;
       _sections[index].OnTabSelected();
     }
 
