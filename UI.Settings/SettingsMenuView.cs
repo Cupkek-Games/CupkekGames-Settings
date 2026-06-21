@@ -51,12 +51,10 @@ namespace CupkekGames.Settings.UI
 
       // Left Panel
       _tabView = root.Q<Luna.TabView>();
-      // Bind content-panel display toggle: each <ui:VisualElement
-      // class="tab-panel" name="X"> sibling in the UXML shows when the
-      // tab button "X" activates. Decouples TabView from content while
-      // keeping local-swap consumers like this one zero-controller for
-      // the panel mechanics.
-      TabPanelSwitcher.Bind(_tabView, root);
+      // Content-panel display toggle is built into TabView now: with no
+      // channel destinations it runs local mode — each <ui:VisualElement
+      // class="tab-panel" name="X"> shows when tab button "X" activates.
+      // No wiring needed (the former TabPanelSwitcher.Bind is absorbed).
       _buttonReturn = root.Q<Button>("ReturnButton");
 
       // Bottom Panel
