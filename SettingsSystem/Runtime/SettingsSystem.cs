@@ -61,6 +61,12 @@ namespace CupkekGames.Settings
       if (section == null)
         return;
 
+      // No LocalizationSettings configured in the project → nothing to apply.
+      // Without this guard, LocalizationSettings.InitializationOperation faults
+      // (no locales/tables exist) and spams the console every settings-apply.
+      if (!LocalizationSettings.HasSettings)
+        return;
+
       if (_applySelectedLocaleRoutine != null)
         StopCoroutine(_applySelectedLocaleRoutine);
 

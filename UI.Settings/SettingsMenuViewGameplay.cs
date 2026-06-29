@@ -26,6 +26,17 @@ namespace CupkekGames.Settings.UI
       _dropdownLanguage = Root.Q<DropdownField>("DropdownLanguage");
 
 #if UNITY_LOCALIZATION
+      if (!LocalizationSettings.HasSettings)
+      {
+        // Localization package is installed, but no LocalizationSettings asset
+        // is configured in the project. Don't start the (failing) init — show a
+        // clear, disabled fallback instead of triggering an error storm.
+        _dropdownLanguage.choices = new List<string>() { "Localization Not Configured" };
+        _dropdownLanguage.value = _dropdownLanguage.choices[0];
+        _dropdownLanguage.SetEnabled(false);
+        return;
+      }
+
       _initializeOperation = LocalizationSettings.SelectedLocaleAsync;
       if (_initializeOperation.IsDone)
       {
@@ -67,6 +78,8 @@ namespace CupkekGames.Settings.UI
     public override void ApplySettingsToUI()
     {
 #if UNITY_LOCALIZATION
+      if (!LocalizationSettings.HasSettings) return;
+
       SettingsDataSectionLocalization localization = (SettingsDataSectionLocalization)_changedSettings.GetValue("localization");
 
       if (_dropdownLanguage.choices.Count > localization.LocaleIndex && localization.LocaleIndex > -1)
