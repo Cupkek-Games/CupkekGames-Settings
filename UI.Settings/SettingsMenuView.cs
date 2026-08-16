@@ -1,3 +1,4 @@
+using CupkekGames.Data;
 using CupkekGames.EditorInspector;
 using CupkekGames.Input;
 using UnityEngine;
@@ -27,6 +28,13 @@ namespace CupkekGames.Settings.UI
     // Pages
     [MultiLineHeader("Ensure that the order of elements matches the order in TabView!")] [SerializeField]
     private SettingsMenuViewSection[] _sections;
+
+    // Nav
+    [Tooltip("Global ChoicePopup destination — pushed with ChoicePopupArgs and awaited " +
+             "when leaving with unsaved changes (Save / Discard / Cancel). Leave empty " +
+             "to save-and-exit without confirming (graceful fallback).")]
+    [CatalogKeyConstraint(NavConstants.NavDestinationCatalogId)]
+    [SerializeField] private CatalogKey _confirmDest;
 
     // Input
     [SerializeField] private string _inputNameRevert = "UI/InteractHold";
@@ -154,18 +162,41 @@ namespace CupkekGames.Settings.UI
       }
     }
 
-    private void Return()
+    private async void Return()
     {
-      OnAcceptModal();
+      // No pending edits, or no confirm destination authored: keep the
+      // established save-and-exit behavior.
+      if (_confirmDest.IsEmpty || _changedSettings.Equals(_settingsSystem.CurrentSettings))
+      {
+        OnAcceptModal();
+        return;
+      }
 
-      // if (_changedSettings.Equals(_settingsSystem.CurrentSettings))
-      // {
-      //   ExitSettings();
-      // }
-      // else
-      // {
-      //   _choicePopupController.Fade.FadeIn();
-      // }
+      var result = await LunaNavigation.PushAsync<int>(_confirmDest, new ChoicePopupArgs
+      {
+        Header = "Unsaved Changes",
+        Body = "You have unsaved changes. Save them before leaving?",
+        Choices = new[]
+        {
+          new ChoicePopupChoice("Save", "emerald"),
+          new ChoicePopupChoice("Discard", "red"),
+          new ChoicePopupChoice("Cancel", "slate"),
+        },
+      });
+
+      if (result.IsDismissed || result.Value == 2)
+      {
+        return; // stay in settings
+      }
+
+      if (result.Value == 0)
+      {
+        OnAcceptModal();
+      }
+      else
+      {
+        OnDeclineModal();
+      }
     }
 
 #if UNITY_INPUT
