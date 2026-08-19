@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 #if UNITY_URP
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 #endif
 
@@ -156,6 +157,76 @@ namespace CupkekGames.Settings
       High = 2,
       Ultra = 3
     }
+
+    // Effects: a coarse Low/High that turns the expensive screen-space work off. What
+    // "Low" disables is authored per game on the section asset: renderer features
+    // (SSAO, screen-space shadows, ...), the camera opaque-texture copy on the URP
+    // assets, and the DoF / Bloom-HQ overrides on a volume profile. Values written to
+    // those assets at runtime are not persisted (same pattern as msaaSampleCount).
+    [Header("Effects (what Low turns off)")]
+    [Tooltip("Renderer features disabled at Low and re-enabled at High (e.g. SSAO, Screen Space Shadows).")]
+    [SerializeField] private ScriptableRendererFeature[] _effectsLowDisablesFeatures;
+    [Tooltip("Turn the URP assets' Opaque Texture off at Low (refraction/distortion effects lose scene color).")]
+    [SerializeField] private bool _effectsLowDisablesOpaqueTexture;
+    [Tooltip("Volume profile whose Depth Of Field / Bloom overrides Low simplifies. Optional.")]
+    [SerializeField] private VolumeProfile _effectsVolumeProfile;
+    [SerializeField] private bool _effectsLowDisablesDepthOfField = true;
+    [SerializeField] private bool _effectsLowDisablesBloomHighQuality = true;
+
+    [SerializeField] private SettingsEffects _effects = SettingsEffects.High;
+    public SettingsEffects Effects
+    {
+      get
+      {
+        return _effects;
+      }
+      set
+      {
+        _effects = value;
+        bool high = _effects == SettingsEffects.High;
+
+        if (_effectsLowDisablesFeatures != null)
+        {
+          foreach (ScriptableRendererFeature feature in _effectsLowDisablesFeatures)
+          {
+            if (feature != null)
+            {
+              feature.SetActive(high);
+            }
+          }
+        }
+
+        if (_effectsLowDisablesOpaqueTexture && RenderPipelineAssets != null)
+        {
+          foreach (UniversalRenderPipelineAsset renderPipelineAsset in RenderPipelineAssets)
+          {
+            if (renderPipelineAsset != null)
+            {
+              renderPipelineAsset.supportsCameraOpaqueTexture = high;
+            }
+          }
+        }
+
+        if (_effectsVolumeProfile != null)
+        {
+          if (_effectsLowDisablesDepthOfField && _effectsVolumeProfile.TryGet(out DepthOfField depthOfField))
+          {
+            depthOfField.active = high;
+          }
+
+          if (_effectsLowDisablesBloomHighQuality && _effectsVolumeProfile.TryGet(out Bloom bloom))
+          {
+            bloom.highQualityFiltering.value = high;
+          }
+        }
+      }
+    }
+
+    public enum SettingsEffects
+    {
+      Low = 0,
+      High = 1
+    }
 #endif
 
     [SerializeField] private SettingsTextureQuality _textureQuality; // 0 = original size, 1 = half size, 2 = quarter size, 3 = eighth size
@@ -189,6 +260,7 @@ namespace CupkekGames.Settings
 #if UNITY_URP
       PlayerPrefs.SetInt($"{key}_AntiAliasing", (int)AntiAliasing);
       PlayerPrefs.SetInt($"{key}_Shadows", (int)Shadows);
+      PlayerPrefs.SetInt($"{key}_Effects", (int)Effects);
 #endif
       PlayerPrefs.SetInt($"{key}_TextureQuality", (int)TextureQuality);
 
@@ -222,6 +294,10 @@ namespace CupkekGames.Settings
       {
         _shadows = (SettingsShadows)PlayerPrefs.GetInt($"{key}_Shadows");
       }
+      if (PlayerPrefs.HasKey($"{key}_Effects"))
+      {
+        _effects = (SettingsEffects)PlayerPrefs.GetInt($"{key}_Effects");
+      }
 #endif
       if (PlayerPrefs.HasKey($"{key}_TextureQuality"))
       {
@@ -252,6 +328,11 @@ namespace CupkekGames.Settings
       {
 #if UNITY_URP
         RenderPipelineAssets = copy.RenderPipelineAssets;
+        _effectsLowDisablesFeatures = copy._effectsLowDisablesFeatures;
+        _effectsLowDisablesOpaqueTexture = copy._effectsLowDisablesOpaqueTexture;
+        _effectsVolumeProfile = copy._effectsVolumeProfile;
+        _effectsLowDisablesDepthOfField = copy._effectsLowDisablesDepthOfField;
+        _effectsLowDisablesBloomHighQuality = copy._effectsLowDisablesBloomHighQuality;
 #endif
 
         _resolutionWidth = copy._resolutionWidth;
@@ -264,6 +345,7 @@ namespace CupkekGames.Settings
 #if UNITY_URP
         _antiAliasing = copy.AntiAliasing;
         _shadows = copy.Shadows;
+        _effects = copy.Effects;
 #endif
         _textureQuality = copy.TextureQuality;
       }
@@ -281,6 +363,7 @@ namespace CupkekGames.Settings
 #if UNITY_URP
         AntiAliasing = copy.AntiAliasing;
         Shadows = copy.Shadows;
+        Effects = copy.Effects;
 #endif
 
         TextureQuality = copy.TextureQuality;
@@ -307,6 +390,7 @@ namespace CupkekGames.Settings
 #if UNITY_URP
              AntiAliasing == b.AntiAliasing &&
              Shadows == b.Shadows &&
+             Effects == b.Effects &&
 #endif
              TextureQuality == b.TextureQuality;
     }
@@ -317,7 +401,7 @@ namespace CupkekGames.Settings
       int hash1 = HashCode.Combine(resolution.width, resolution.height, resolution.refreshRateRatio.denominator,
         resolution.refreshRateRatio.numerator, _fullScreenMode);
 #if UNITY_URP
-      int hash2 = HashCode.Combine(VSync, TargetFrameRate, AntiAliasing, Shadows, TextureQuality);
+      int hash2 = HashCode.Combine(VSync, TargetFrameRate, AntiAliasing, Shadows, Effects, TextureQuality);
 #else
       int hash2 = HashCode.Combine(VSync, TargetFrameRate, TextureQuality);
 #endif

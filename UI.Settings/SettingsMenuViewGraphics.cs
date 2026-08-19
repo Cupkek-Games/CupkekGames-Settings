@@ -22,6 +22,9 @@ namespace CupkekGames.Settings.UI
 
     private RadioButtonGroup _shadows;
 
+    // Optional row (added 2026-08): a RadioButtonGroup named "Effects" with LOW/HIGH.
+    private RadioButtonGroup _effects;
+
     private RadioButtonGroup _textureQuality;
 
     protected override void Initialize()
@@ -55,6 +58,12 @@ namespace CupkekGames.Settings.UI
       _toggleVSync = Root.Q<Toggle>("ToggleVSync");
       _antiAliasing = Root.Q<RadioButtonGroup>("AntiAliasing");
       _shadows = Root.Q<RadioButtonGroup>("Shadows");
+      _effects = Root.Q<RadioButtonGroup>("Effects");
+      if (_effects == null)
+      {
+        Debug.LogWarning("SettingsMenuViewGraphics: no RadioButtonGroup named 'Effects' in the graphics UXML — " +
+                         "the Effects (Low/High) option is not exposed to the player.");
+      }
       _textureQuality = Root.Q<RadioButtonGroup>("TextureQuality");
 
       _dropdownResolution.RegisterValueChangedCallback(OnDropdownResolutionChanged);
@@ -64,6 +73,7 @@ namespace CupkekGames.Settings.UI
 #if UNITY_URP
       _antiAliasing.RegisterValueChangedCallback(OnAntiAliasingChanged);
       _shadows.RegisterValueChangedCallback(OnShadowsChanged);
+      _effects?.RegisterValueChangedCallback(OnEffectsChanged);
 #endif
       _textureQuality.RegisterValueChangedCallback(OnTextureQualityChanged);
     }
@@ -77,6 +87,7 @@ namespace CupkekGames.Settings.UI
 #if UNITY_URP
       _antiAliasing.UnregisterValueChangedCallback(OnAntiAliasingChanged);
       _shadows.UnregisterValueChangedCallback(OnShadowsChanged);
+      _effects?.UnregisterValueChangedCallback(OnEffectsChanged);
 #endif
       _textureQuality.UnregisterValueChangedCallback(OnTextureQualityChanged);
     }
@@ -102,6 +113,10 @@ namespace CupkekGames.Settings.UI
 #if UNITY_URP
       _antiAliasing.value = EnumHelper.GetIndexOfEnum(graphics.AntiAliasing);
       _shadows.value = EnumHelper.GetIndexOfEnum(graphics.Shadows);
+      if (_effects != null)
+      {
+        _effects.value = EnumHelper.GetIndexOfEnum(graphics.Effects);
+      }
 #endif
       _textureQuality.value = 3 - EnumHelper.GetIndexOfEnum(graphics.TextureQuality);
     }
@@ -158,6 +173,13 @@ namespace CupkekGames.Settings.UI
       SettingsDataSectionGraphics graphics = (SettingsDataSectionGraphics)_changedSettings.GetValue("graphics");
 
       graphics.Shadows = EnumHelper.GetEnumFromIndex<SettingsDataSectionGraphics.SettingsShadows>(evt.newValue);
+    }
+
+    private void OnEffectsChanged(ChangeEvent<int> evt)
+    {
+      SettingsDataSectionGraphics graphics = (SettingsDataSectionGraphics)_changedSettings.GetValue("graphics");
+
+      graphics.Effects = EnumHelper.GetEnumFromIndex<SettingsDataSectionGraphics.SettingsEffects>(evt.newValue);
     }
 #endif
 
