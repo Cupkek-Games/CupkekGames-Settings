@@ -20,6 +20,8 @@ namespace CupkekGames.Settings
         else
         {
           clone = (SettingsDataSection)ScriptableObject.CreateInstance(section.GetType());
+          clone.name = section.name;
+          clone.hideFlags = HideFlags.DontSave;
           TryAdd(key, clone);
         }
 

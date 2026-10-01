@@ -3,6 +3,8 @@
     "rootNamespace": "",
     "references": [
         "CupkekGames.Settings",
+        "CupkekGames.KeyValueDatabases",
+        "CupkekGames.Singletons",
         "Unity.RenderPipelines.Core.Runtime",
         "Unity.RenderPipelines.Universal.Runtime",
         "UnityEngine.TestRunner",

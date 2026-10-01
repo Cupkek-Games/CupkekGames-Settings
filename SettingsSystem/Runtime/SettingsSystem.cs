@@ -11,10 +11,47 @@ namespace CupkekGames.Settings
 {
   public class SettingsSystem : Singleton<SettingsSystem>
   {
-    [SerializeField] private SettingsDataSO _currentSettings;
-    public SettingsDataSO CurrentSettings => _currentSettings;
     [SerializeField] private SettingsDataSO _defaultSettings;
     public SettingsDataSO DefaultSettings => _defaultSettings;
+
+    // The player's settings live in a runtime copy of the defaults, never in a project
+    // asset: an asset the save is loaded into shows up modified after every editor
+    // play session (and a stale copy of the player's save ends up in version control).
+    private SettingsDataSO _currentSettings;
+
+    /// <summary>
+    /// The settings in effect: a runtime copy of <see cref="DefaultSettings"/> with the
+    /// player's saved values loaded over it. Built on first use, so it is ready for
+    /// readers whose Awake or Start runs before this one's.
+    /// </summary>
+    public SettingsDataSO CurrentSettings
+    {
+      get
+      {
+        if (_currentSettings == null)
+        {
+          _currentSettings = CreateCurrentSettings(_defaultSettings);
+        }
+
+        return _currentSettings;
+      }
+    }
+
+    /// <summary>A runtime copy of <paramref name="defaults"/> with the saved values loaded.</summary>
+    public static SettingsDataSO CreateCurrentSettings(SettingsDataSO defaults)
+    {
+      if (defaults == null)
+      {
+        throw new System.InvalidOperationException("[SettingsSystem] No default settings assigned.");
+      }
+
+      SettingsDataSO current = ScriptableObject.CreateInstance<SettingsDataSO>();
+      current.name = defaults.name + " (current)";
+      current.hideFlags = HideFlags.DontSave;
+      current.CopyValuesFrom(defaults);
+      current.LoadFromPlayerPrefs();
+      return current;
+    }
 
 #if UNITY_LOCALIZATION
     private const string LocalizationSectionKey = "localization";
@@ -24,28 +61,46 @@ namespace CupkekGames.Settings
 
     private void Start()
     {
-      CurrentSettings.CopyValuesFrom(DefaultSettings);
-      CurrentSettings.LoadFromPlayerPrefs();
       ApplySettings(CurrentSettings);
+    }
+
+    protected virtual void OnDestroy()
+    {
+      if (_currentSettings == null)
+      {
+        return;
+      }
+
+      foreach (SettingsDataSection section in _currentSettings.Values)
+      {
+        if (section != null)
+        {
+          Destroy(section);
+        }
+      }
+
+      Destroy(_currentSettings);
+      _currentSettings = null;
     }
 
     public void SaveAndApplySettings()
     {
       CurrentSettings.SaveToPlayerPrefs();
-      ApplySettings(_currentSettings);
+      ApplySettings(CurrentSettings);
     }
 
     public void ApplySettings(SettingsDataSO settingsData)
     {
       Debug.Log("Applying settings");
 
-      foreach (var key in _currentSettings.Keys)
+      SettingsDataSO current = CurrentSettings;
+      foreach (var key in current.Keys)
       {
-        _currentSettings.GetValue(key).ApplySettings(settingsData.GetValue(key));
+        current.GetValue(key).ApplySettings(settingsData.GetValue(key));
       }
 
 #if UNITY_LOCALIZATION
-      if (_currentSettings.TryGetValue(LocalizationSectionKey, out var loc) &&
+      if (current.TryGetValue(LocalizationSectionKey, out var loc) &&
           loc is SettingsDataSectionLocalization locSection)
         ScheduleApplySelectedLocale(locSection);
 #endif

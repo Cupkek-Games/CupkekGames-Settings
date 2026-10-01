@@ -13,6 +13,10 @@ Settings registry + Luna UI panel: graphics quality, audio, locale, input bindin
 
 The graphics section writes the player's choices into shared assets (URP assets, renderer features, volume profiles, QualitySettings). `AuthoredGraphicsState` remembers each value before its first write: Effects High returns to that authored state instead of switching everything on, and in the editor every value is put back on leaving play mode, so play sessions never save the player's settings into the project. An optional **Effects Low drops profile** turns a whole profile off at Low (since 0.3.5).
 
+## Current settings are a runtime copy
+
+`SettingsSystem` has one settings asset slot, the defaults. `CurrentSettings` is a runtime copy of them with the player's saved values loaded over it, built on first use; no project asset ever holds the player's save, so play sessions leave the settings assets untouched (since 0.3.6; earlier versions had a second "current settings" asset that the save was loaded into).
+
 ## Dependencies
 
 - `com.cupkekgames.singletons` (`SettingsSystem` singleton)
