@@ -27,6 +27,9 @@ namespace CupkekGames.Settings.UI
 
     private RadioButtonGroup _textureQuality;
 
+    // Optional row (0.3.7): a RadioButtonGroup named "RenderScale" with 100%/125%/150%.
+    private RadioButtonGroup _renderScale;
+
     protected override void Initialize()
     {
       Resolution[] resolutions = Screen.resolutions;
@@ -65,6 +68,12 @@ namespace CupkekGames.Settings.UI
                          "the Effects (Low/High) option is not exposed to the player.");
       }
       _textureQuality = Root.Q<RadioButtonGroup>("TextureQuality");
+      _renderScale = Root.Q<RadioButtonGroup>("RenderScale");
+      if (_renderScale == null)
+      {
+        Debug.LogWarning("SettingsMenuViewGraphics: no RadioButtonGroup named 'RenderScale' in the graphics UXML; " +
+                         "the render scale (100/125/150%) option is not exposed to the player.");
+      }
 
       _dropdownResolution.RegisterValueChangedCallback(OnDropdownResolutionChanged);
       _radioGroupWindowMode.RegisterValueChangedCallback(OnRadioGroupWindowModeChanged);
@@ -74,6 +83,7 @@ namespace CupkekGames.Settings.UI
       _antiAliasing.RegisterValueChangedCallback(OnAntiAliasingChanged);
       _shadows.RegisterValueChangedCallback(OnShadowsChanged);
       _effects?.RegisterValueChangedCallback(OnEffectsChanged);
+      _renderScale?.RegisterValueChangedCallback(OnRenderScaleChanged);
 #endif
       _textureQuality.RegisterValueChangedCallback(OnTextureQualityChanged);
     }
@@ -88,6 +98,7 @@ namespace CupkekGames.Settings.UI
       _antiAliasing.UnregisterValueChangedCallback(OnAntiAliasingChanged);
       _shadows.UnregisterValueChangedCallback(OnShadowsChanged);
       _effects?.UnregisterValueChangedCallback(OnEffectsChanged);
+      _renderScale?.UnregisterValueChangedCallback(OnRenderScaleChanged);
 #endif
       _textureQuality.UnregisterValueChangedCallback(OnTextureQualityChanged);
     }
@@ -116,6 +127,10 @@ namespace CupkekGames.Settings.UI
       if (_effects != null)
       {
         _effects.value = EnumHelper.GetIndexOfEnum(graphics.Effects);
+      }
+      if (_renderScale != null)
+      {
+        _renderScale.value = EnumHelper.GetIndexOfEnum(graphics.RenderScale);
       }
 #endif
       _textureQuality.value = 3 - EnumHelper.GetIndexOfEnum(graphics.TextureQuality);
@@ -180,6 +195,13 @@ namespace CupkekGames.Settings.UI
       SettingsDataSectionGraphics graphics = (SettingsDataSectionGraphics)_changedSettings.GetValue("graphics");
 
       graphics.Effects = EnumHelper.GetEnumFromIndex<SettingsDataSectionGraphics.SettingsEffects>(evt.newValue);
+    }
+
+    private void OnRenderScaleChanged(ChangeEvent<int> evt)
+    {
+      SettingsDataSectionGraphics graphics = (SettingsDataSectionGraphics)_changedSettings.GetValue("graphics");
+
+      graphics.RenderScale = EnumHelper.GetEnumFromIndex<SettingsDataSectionGraphics.SettingsRenderScale>(evt.newValue);
     }
 #endif
 

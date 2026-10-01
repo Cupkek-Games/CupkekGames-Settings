@@ -114,6 +114,8 @@ namespace CupkekGames.Settings.Tests
       Wire();
 
       _section.AntiAliasing = SettingsDataSectionGraphics.SettingsAntiAliasing.Off;
+      _section.RenderScale = SettingsDataSectionGraphics.SettingsRenderScale.OneFifty;
+      Assert.AreEqual(1.5f, _urpAsset.renderScale, 1e-4f);
       _section.Effects = SettingsDataSectionGraphics.SettingsEffects.Low;
       _section.TextureQuality = SettingsDataSectionGraphics.SettingsTextureQuality.Half;
       Assert.AreEqual(1, _urpAsset.msaaSampleCount);
@@ -121,6 +123,7 @@ namespace CupkekGames.Settings.Tests
       AuthoredGraphicsState.RestoreAll();
 
       Assert.AreEqual(4, _urpAsset.msaaSampleCount);
+      Assert.AreEqual(1f, _urpAsset.renderScale, 1e-4f, "Render scale back to authored.");
       Assert.IsFalse(bloom.highQualityFiltering.overrideState);
       Assert.IsFalse(bloom.highQualityFiltering.value);
       Assert.IsTrue(vignette.active);

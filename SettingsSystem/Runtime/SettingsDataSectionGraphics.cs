@@ -156,6 +156,36 @@ namespace CupkekGames.Settings
       }
     }
 
+    // Render scale: the URP assets' renderScale (crisper shader and texture edges
+    // above 100%; MSAA already handles geometry edges). Since 0.3.7.
+    [SerializeField] private SettingsRenderScale _renderScale = SettingsRenderScale.OneHundred;
+    public SettingsRenderScale RenderScale
+    {
+      get
+      {
+        return _renderScale;
+      }
+      set
+      {
+        _renderScale = value;
+
+        foreach (UniversalRenderPipelineAsset renderPipelineAsset in RenderPipelineAssets)
+        {
+          if (renderPipelineAsset == null) continue;
+          UniversalRenderPipelineAsset asset = renderPipelineAsset;
+          AuthoredGraphicsState.Remember(asset, nameof(asset.renderScale), asset.renderScale, v => asset.renderScale = v);
+          asset.renderScale = (int)_renderScale / 100f;
+        }
+      }
+    }
+
+    public enum SettingsRenderScale
+    {
+      OneHundred = 100,
+      OneTwentyFive = 125,
+      OneFifty = 150
+    }
+
     public enum SettingsShadows
     {
       Low = 0,
@@ -301,6 +331,7 @@ namespace CupkekGames.Settings
       PlayerPrefs.SetInt($"{key}_AntiAliasing", (int)AntiAliasing);
       PlayerPrefs.SetInt($"{key}_Shadows", (int)Shadows);
       PlayerPrefs.SetInt($"{key}_Effects", (int)Effects);
+      PlayerPrefs.SetInt($"{key}_RenderScale", (int)RenderScale);
 #endif
       PlayerPrefs.SetInt($"{key}_TextureQuality", (int)TextureQuality);
 
@@ -337,6 +368,10 @@ namespace CupkekGames.Settings
       if (PlayerPrefs.HasKey($"{key}_Effects"))
       {
         _effects = (SettingsEffects)PlayerPrefs.GetInt($"{key}_Effects");
+      }
+      if (PlayerPrefs.HasKey($"{key}_RenderScale"))
+      {
+        _renderScale = (SettingsRenderScale)PlayerPrefs.GetInt($"{key}_RenderScale");
       }
 #endif
       if (PlayerPrefs.HasKey($"{key}_TextureQuality"))
@@ -387,6 +422,7 @@ namespace CupkekGames.Settings
         _antiAliasing = copy.AntiAliasing;
         _shadows = copy.Shadows;
         _effects = copy.Effects;
+        _renderScale = copy.RenderScale;
 #endif
         _textureQuality = copy.TextureQuality;
       }
@@ -405,6 +441,7 @@ namespace CupkekGames.Settings
         AntiAliasing = copy.AntiAliasing;
         Shadows = copy.Shadows;
         Effects = copy.Effects;
+        RenderScale = copy.RenderScale;
 #endif
 
         TextureQuality = copy.TextureQuality;
@@ -432,6 +469,7 @@ namespace CupkekGames.Settings
              AntiAliasing == b.AntiAliasing &&
              Shadows == b.Shadows &&
              Effects == b.Effects &&
+             RenderScale == b.RenderScale &&
 #endif
              TextureQuality == b.TextureQuality;
     }
@@ -442,7 +480,7 @@ namespace CupkekGames.Settings
       int hash1 = HashCode.Combine(resolution.width, resolution.height, resolution.refreshRateRatio.denominator,
         resolution.refreshRateRatio.numerator, _fullScreenMode);
 #if UNITY_URP
-      int hash2 = HashCode.Combine(VSync, TargetFrameRate, AntiAliasing, Shadows, Effects, TextureQuality);
+      int hash2 = HashCode.Combine(VSync, TargetFrameRate, AntiAliasing, Shadows, Effects, RenderScale, TextureQuality);
 #else
       int hash2 = HashCode.Combine(VSync, TargetFrameRate, TextureQuality);
 #endif

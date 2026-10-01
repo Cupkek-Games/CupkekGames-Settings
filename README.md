@@ -11,7 +11,7 @@ Settings registry + Luna UI panel: graphics quality, audio, locale, input bindin
 
 ## Graphics: runtime writes to shared assets
 
-The graphics section writes the player's choices into shared assets (URP assets, renderer features, volume profiles, QualitySettings). `AuthoredGraphicsState` remembers each value before its first write: Effects High returns to that authored state instead of switching everything on, and in the editor every value is put back on leaving play mode, so play sessions never save the player's settings into the project. An optional **Effects Low drops profile** turns a whole profile off at Low (since 0.3.5).
+The graphics section writes the player's choices into shared assets (URP assets, renderer features, volume profiles, QualitySettings). `AuthoredGraphicsState` remembers each value before its first write: Effects High returns to that authored state instead of switching everything on, and in the editor every value is put back on leaving play mode, so play sessions never save the player's settings into the project. An optional **Effects Low drops profile** turns a whole profile off at Low (since 0.3.5). **Render scale** (100 / 125 / 150%, an optional `RenderScale` radio row in the graphics UXML) sets every URP asset's render scale, restored the same way (since 0.3.7).
 
 ## Current settings are a runtime copy
 
