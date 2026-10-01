@@ -1,12 +1,12 @@
 {
   "name": "com.cupkekgames.settings",
   "displayName": "CupkekGames Settings",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "author": {
     "name": "CupkekGames",
     "url": "https://www.docs.cupkek.games"
   },
-  "unity": "6000.0",
+  "unity": "6000.5",
   "documentationUrl": "https://docs.cupkek.games/",
   "description": "Settings system + Luna UI panel for CupkekGames packages: graphics quality, audio, locale, input bindings.",
   "keywords": [

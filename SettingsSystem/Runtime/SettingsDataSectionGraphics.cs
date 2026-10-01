@@ -81,6 +81,7 @@ namespace CupkekGames.Settings
       set
       {
         _vSync = value;
+        RememberQuality(nameof(QualitySettings.vSyncCount), QualitySettings.vSyncCount, v => QualitySettings.vSyncCount = v);
         QualitySettings.vSyncCount = _vSync ? 1 : 0;
       }
     }
@@ -119,9 +120,14 @@ namespace CupkekGames.Settings
       {
         _antiAliasing = value;
 
+        // URP mirrors the active asset's MSAA into QualitySettings.antiAliasing.
+        RememberQuality(nameof(QualitySettings.antiAliasing), QualitySettings.antiAliasing, v => QualitySettings.antiAliasing = v);
         foreach (UniversalRenderPipelineAsset renderPipelineAsset in RenderPipelineAssets)
         {
-          renderPipelineAsset.msaaSampleCount = (int)AntiAliasing;
+          if (renderPipelineAsset == null) continue;
+          UniversalRenderPipelineAsset asset = renderPipelineAsset;
+          AuthoredGraphicsState.Remember(asset, nameof(asset.msaaSampleCount), asset.msaaSampleCount, v => asset.msaaSampleCount = v);
+          asset.msaaSampleCount = (int)AntiAliasing;
         }
       }
     }
@@ -145,7 +151,7 @@ namespace CupkekGames.Settings
       {
         _shadows = value;
 
-
+        RememberQuality(nameof(QualitySettings.renderPipeline), QualitySettings.renderPipeline, v => QualitySettings.renderPipeline = v);
         QualitySettings.renderPipeline = RenderPipelineAssets[(int)_shadows];
       }
     }
@@ -161,8 +167,10 @@ namespace CupkekGames.Settings
     // Effects: a coarse Low/High that turns the expensive screen-space work off. What
     // "Low" disables is authored per game on the section asset: renderer features
     // (SSAO, screen-space shadows, ...), the camera opaque-texture copy on the URP
-    // assets, and the DoF / Bloom-HQ overrides on a volume profile. Values written to
-    // those assets at runtime are not persisted (same pattern as msaaSampleCount).
+    // assets, the DoF / Bloom-HQ overrides on a volume profile, and a whole profile of
+    // optional effects. High is the authored state, not "everything on": every value
+    // is remembered before its first write (AuthoredGraphicsState), which is also what
+    // the editor puts back on leaving play mode.
     [Header("Effects (what Low turns off)")]
     [Tooltip("Renderer features disabled at Low and re-enabled at High (e.g. SSAO, Screen Space Shadows).")]
     [SerializeField] private ScriptableRendererFeature[] _effectsLowDisablesFeatures;
@@ -172,6 +180,8 @@ namespace CupkekGames.Settings
     [SerializeField] private VolumeProfile _effectsVolumeProfile;
     [SerializeField] private bool _effectsLowDisablesDepthOfField = true;
     [SerializeField] private bool _effectsLowDisablesBloomHighQuality = true;
+    [Tooltip("Volume profile Low turns off entirely (optional effects only, e.g. a presentation profile with depth of field on close-up cameras). Optional.")]
+    [SerializeField] private VolumeProfile _effectsLowDropsProfile;
 
     [SerializeField] private SettingsEffects _effects = SettingsEffects.High;
     public SettingsEffects Effects
@@ -189,10 +199,9 @@ namespace CupkekGames.Settings
         {
           foreach (ScriptableRendererFeature feature in _effectsLowDisablesFeatures)
           {
-            if (feature != null)
-            {
-              feature.SetActive(high);
-            }
+            if (feature == null) continue;
+            bool authored = AuthoredGraphicsState.Remember(feature, nameof(feature.isActive), feature.isActive, feature.SetActive);
+            feature.SetActive(high && authored);
           }
         }
 
@@ -200,10 +209,11 @@ namespace CupkekGames.Settings
         {
           foreach (UniversalRenderPipelineAsset renderPipelineAsset in RenderPipelineAssets)
           {
-            if (renderPipelineAsset != null)
-            {
-              renderPipelineAsset.supportsCameraOpaqueTexture = high;
-            }
+            if (renderPipelineAsset == null) continue;
+            UniversalRenderPipelineAsset asset = renderPipelineAsset;
+            bool authored = AuthoredGraphicsState.Remember(asset, nameof(asset.supportsCameraOpaqueTexture),
+              asset.supportsCameraOpaqueTexture, v => asset.supportsCameraOpaqueTexture = v);
+            asset.supportsCameraOpaqueTexture = high && authored;
           }
         }
 
@@ -211,12 +221,28 @@ namespace CupkekGames.Settings
         {
           if (_effectsLowDisablesDepthOfField && _effectsVolumeProfile.TryGet(out DepthOfField depthOfField))
           {
-            depthOfField.active = high;
+            SetComponentActive(depthOfField, high);
           }
 
           if (_effectsLowDisablesBloomHighQuality && _effectsVolumeProfile.TryGet(out Bloom bloom))
           {
-            bloom.highQualityFiltering.value = high;
+            // The value only counts with its override on, so the two move together.
+            BoolParameter hq = bloom.highQualityFiltering;
+            (bool Overridden, bool On) authored = AuthoredGraphicsState.Remember(bloom, nameof(bloom.highQualityFiltering),
+              (hq.overrideState, hq.value), v => { hq.overrideState = v.Item1; hq.value = v.Item2; });
+            hq.overrideState = high ? authored.Overridden : true;
+            hq.value = high && authored.On;
+          }
+        }
+
+        if (_effectsLowDropsProfile != null)
+        {
+          foreach (VolumeComponent component in _effectsLowDropsProfile.components)
+          {
+            if (component != null)
+            {
+              SetComponentActive(component, high);
+            }
           }
         }
       }
@@ -227,7 +253,19 @@ namespace CupkekGames.Settings
       Low = 0,
       High = 1
     }
+
+    // High: the authored state. Low: off.
+    private static void SetComponentActive(VolumeComponent component, bool high)
+    {
+      bool authored = AuthoredGraphicsState.Remember(component, nameof(component.active), component.active, v => component.active = v);
+      component.active = high && authored;
+    }
 #endif
+
+    private static void RememberQuality<T>(string property, T current, Action<T> restore)
+    {
+      AuthoredGraphicsState.Remember(typeof(QualitySettings), property, current, restore);
+    }
 
     [SerializeField] private SettingsTextureQuality _textureQuality; // 0 = original size, 1 = half size, 2 = quarter size, 3 = eighth size
     public SettingsTextureQuality TextureQuality
@@ -240,6 +278,8 @@ namespace CupkekGames.Settings
       {
         _textureQuality = value;
 
+        RememberQuality(nameof(QualitySettings.globalTextureMipmapLimit), QualitySettings.globalTextureMipmapLimit,
+          v => QualitySettings.globalTextureMipmapLimit = v);
         QualitySettings.globalTextureMipmapLimit = (int)_textureQuality;
       }
     }
@@ -333,6 +373,7 @@ namespace CupkekGames.Settings
         _effectsVolumeProfile = copy._effectsVolumeProfile;
         _effectsLowDisablesDepthOfField = copy._effectsLowDisablesDepthOfField;
         _effectsLowDisablesBloomHighQuality = copy._effectsLowDisablesBloomHighQuality;
+        _effectsLowDropsProfile = copy._effectsLowDropsProfile;
 #endif
 
         _resolutionWidth = copy._resolutionWidth;
