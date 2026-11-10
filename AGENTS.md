@@ -2,7 +2,7 @@
 
 ## Package Overview
 
-**CupkekGames Settings** (`com.cupkekgames.settings`) is the settings registry + Luna UI panel + autosave indicator. Bridges Unity URP/Localization/Input/GameSave systems for end-user-facing configuration.
+**CupkekGames Settings** (`com.cupkekgames.settings`) is the settings registry + Luna UI panel. Bridges Unity URP/Localization/Input/GameSave systems for end-user-facing configuration.
 
 ## Critical: Do not hand-edit Unity serialized assets or `.meta` files
 
@@ -15,14 +15,13 @@ com.cupkekgames.settings/
   package.json
   README.md
   AGENTS.md
-  SettingsSystem/                  ← CupkekGames.Systems.Settings.asmdef
+  SettingsSystem/                  ← CupkekGames.Settings.asmdef
     Runtime/                         (settings registry, URP/Localization/Input adapters)
-    Editor/
-  UI.Settings/                     ← CupkekGames.Systems.UI.Settings.asmdef
-    Runtime/                         (Luna settings panel + control widgets)
-    Editor/
+  UI.Settings/                     ← CupkekGames.Settings.UI.asmdef
+                                     (Luna settings panel + control widgets)
+  Tests/                           ← CupkekGames.Settings.Tests.asmdef
 
-(UI.WithGameSave — autosave indicator UI — lives in Luna's `Samples~/GameFull/Scripts/UI.WithGameSave/`, not here. It's sample-grade scaffolding.)
+(The GameSave UI (save slots, version label) lives in `com.cupkekgames.gamesave.luna`, not here.)
 ```
 
 ## Dependencies
@@ -32,14 +31,15 @@ com.cupkekgames.settings/
 - `com.cupkekgames.editorinspector` (`[MultiLineHeader]`)
 - `com.cupkekgames.input`
 - `com.cupkekgames.luna`
-- `com.cupkekgames.data` (settings persist via GameSave; autosave UI listens to GameSave events)
+- `com.cupkekgames.data`, `com.cupkekgames.gamesave` (settings persist via GameSave)
+- `com.cupkekgames.services`, `com.cupkekgames.sequencer`, `com.cupkekgames.scenemanagement`, `com.cupkekgames.addressableassets`
 - `com.unity.localization`, `com.unity.inputsystem`, `com.unity.render-pipelines.universal` (versionDefines)
 
 Note: `EnumHelper` (formerly in `com.cupkekgames.core`) was folded into this package's `SettingsSystem/Runtime/EnumHelper.cs` since `SettingsMenuViewGraphics` is its only consumer.
 
 ## Coding Conventions
 
-- **Namespaces**: `CupkekGames.Systems.Settings`, `CupkekGames.Systems.UI.Settings`, `CupkekGames.Systems.UI.WithGameSave`
+- **Namespaces**: `CupkekGames.Settings`, `CupkekGames.Settings.UI`
 - **versionDefines** for Localization/Input/URP — code paths gate on package presence
 - **Asmdefs**: GUID references
 - **Strict typing**
